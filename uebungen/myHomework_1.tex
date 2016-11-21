@@ -1,0 +1,105 @@
+\documentclass[11pt]{scrartcl}
+\usepackage{geometry}
+\usepackage[ngerman,english]{babel}
+\geometry{verbose,a4paper,tmargin=25mm,bmargin=25mm,lmargin=25mm,rmargin=25mm}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+\title{Randomness in Cryptography\\Homework Exercise 1\\Paul Rösler \emph{108012225685}}
+\begin{document}
+\maketitle
+
+\section*{Exercise 1}
+\begin{enumerate}
+	\item $\Delta(X;Y) = \frac{1}{2}(|Pr[X=0]-Pr[Y=0]|+|Pr[X=1]-Pr[Y=1]|)$\\
+	$= \frac{1}{2}(|1-Pr[X=1]-1+Pr[Y=1]|+|Pr[X=1]-Pr[Y=1]|)$\\
+	$= 2\frac{1}{2}(|Pr[X=1]+Pr[Y=1]|)$\\
+	$=|Pr[X=1]+Pr[Y=1]|$\\
+\item $\Delta(X;Y)+\Delta(Y;Z)$\\
+	$= \frac{1}{2}(\sum_{u\in\mathcal{U}} |Pr[X=u]-Pr[Y=u]|+\sum_{u\in\mathcal{U}} |Pr[Y=u]-Pr[Z=u]|)$\\
+	$=\frac{1}{2}(\sum_{u\in\mathcal{U}} |\underbrace{Pr[X=u]-Pr[Y=u]}_a |+ |\underbrace{Pr[Y=u]-Pr[Z=u]}_b|)$\\
+	
+	\begin{addmargin}{1cm}
+	$sgn(a)=sgn(b) \Rightarrow |a+b|=|a|+|b|$\\
+	$sgn(a)\neq sgn(b) \Rightarrow |a+b|<|a|+|b|$
+	\end{addmargin} 
+
+	$\geq \frac{1}{2}(\sum_{u\in\mathcal{U}} |Pr[X=u]-Pr[Y=u] + Pr[Y=u]-Pr[Z=u]|)$\\
+	$= \frac{1}{2}(\sum_{u\in\mathcal{U}} |Pr[X=u]-Pr[Z=u]|)$\\
+	$= \Delta(X;Z)$\\
+\item $\Delta((X,Z);(Y,Z))= \frac{1}{2}(\sum_{u_1,u_2\in\mathcal{U}} |Pr[X=u_1 \wedge Z=u_2]-Pr[Y=u_1 \wedge Z=u_2]|)$\\
+	$=_{indep.} \frac{1}{2}(\sum_{u_1,u_2\in\mathcal{U}} |Pr[X=u_1] Pr[Z=u_2]-Pr[Y=u_1] Pr[Z=u_2]|)$\\
+	$= \frac{1}{2}(\sum_{u_1,u_2\in\mathcal{U}} | Pr[Z=u_2] (Pr[X=u_1]-Pr[Y=u_1])|)$\\
+	$= \frac{1}{2}(\sum_{u_1\in\mathcal{U}} \underbrace{\sum_{u_2\in\mathcal{U}} Pr[Z=u_2]}_{=1} |Pr[X=u_1]-Pr[Y=u_1]|)$\\
+	$= \frac{1}{2}(\sum_{u_1\in\mathcal{U}} |Pr[X=u_1]-Pr[Y=u_1]|)$\\
+	$= \Delta(X;Y)$\\
+\end{enumerate}
+
+\section*{Exercise 2}
+\begin{enumerate}
+	\item Set of phone numbers: since phone numbers are set of a prefix code not all combinations of digits are possible.
+
+		Since I don't know $n$ and $k$ for phone numbers, I give a toy example:
+
+		$n=4, \mathcal{U}=\{0001,0000,001,01,1\}$\\
+		$X:\forall u\in\mathcal{U}:Pr[X=u]=\frac{1}{4}$\\
+		$\Rightarrow k=2$
+
+	\item $|\mathcal{U}|=n+1$\\
+		$X:Pr[X=u_{max}]=\frac{1}{c}$ for $c$ constant\\
+		$\forall u_i \in \mathcal{U}\setminus\{u_{max}\}:Pr[X=u_i]=(1-\frac{1}{c})\frac{1}{n}=\frac{c-1}{nc}$\\
+		
+		$\Rightarrow \mathbb{H}_{\infty}(X) = \log(c), \mathbb{H}_{2}(X) = \frac{c-1}{c}\log(\frac{nc}{c-1})+\frac{1}{c} \log(c)$\\
+		$\Rightarrow \lim_{n\to \infty} \mathbb{H}_{\infty}(X) = \log(c), \lim_{n\to \infty} \mathbb{H}_{2}(X) \to \infty$
+
+	\item For $\mathbb{H}_{\infty}(X)\geq k, \mathbb{H}_{\infty}(Y)=n \Rightarrow \mathbb{H}_{\infty}(X,Y)\geq n+k$ if $Y$ is independent of $X$.\\
+		For $Y=f(X) \Rightarrow \mathbb{H}_{\infty}(X,Y)=\mathbb{H}_{\infty}(X,f(X))=\mathbb{H}_{\infty}(X)\geq k$\\
+		since $\forall u_i \leftarrow X$ there exists one $v_j \leftarrow Y$ s.t. $f(u_i)=v_j$
+\end{enumerate}
+
+\section*{Exercise 3}
+\begin{enumerate}
+	\item $b:= Ext(X) = \begin{cases} 1: \frac{1}{n}\sum_n \frac{1}{2 \delta_i} X_i > \frac{1}{2}\\ 0: else\end{cases}$\\
+	Since $E(\frac{1}{n}\sum_n \frac{1}{2 \delta_i} X_i)=\frac{1}{n}\sum_n \frac{1}{2 \delta_i} E(X_i) = \frac{1}{n}\sum_n \frac{1}{2 \delta_i} \delta_i = \frac{1}{n}\sum_n \frac{1}{2} = \frac{1}{2}$
+
+	\item The quality seeded randomness extractors depends on the following parameters:
+	\begin{itemize}
+		\item $d$ is the length of the random seed, needed to feed the extractor. Since real randomness is needed for the seed, $d$ is targeted to be minimized for the design of an extractor.
+		\item $n$ is the length of the source input. Since shorter input can be processed more efficiently it shall be small. $n$ indirectly affects $d$ as it can be seen in \emph{Theorem 3} in the script, but only the difference $n-k$ is important in that context and should therefore be small.
+		\item $k$ is the min-entropy of the source $X$ which is the input of the extractor. Since the requirement of bad sources can easier be fulfilled, $k$ should be minimized.
+		\item $m$ is the output length. The main goal of an extractor is to output many almost uniform bits. Hence $m$ should be maximized.
+		\item $\epsilon$ is the maximal statistical distance between the output of the extractor and real randomness. Since the output of the extractor should have a small statistical distance to real randomness, $\epsilon$ should be targeted to be small.
+	\end{itemize}
+
+	\item Assume $\exists ext: \{0,1\}^d\times\{0,1\}^n\rightarrow\{0,1\}^m (k-1,\epsilon)$-seeded randomness extractor with $m>k+d$\\
+	$\Rightarrow \Delta(Ext(\mathcal{U}_d,X);\mathcal{U}_m)\leq \epsilon$ for an $(n,k-1)$ source $X$\\
+	$\Rightarrow \Delta(Ext(\mathcal{U}_d,X);\mathcal{U}_m)= 0$ w.l.o.g. set $m=k+d+\delta, \delta\to0$\\
+	$\Rightarrow \Delta(Ext(\mathcal{U}_d,X);\mathcal{U}_{k+d+\delta})= 0$\\
+	$\Rightarrow \mathbb{H}_\infty(\mathcal{U}_d,X) \geq \mathbb{H}_\infty(\mathcal{U}_{k+d+\delta})=k+d+\delta$\\
+	But since $\mathbb{H}_\infty(X)=k-1 \Rightarrow \mathbb{H}_\infty(\mathcal{U}_d,X) - \mathbb{H}_\infty(\mathcal{U}_{k+d+\delta})=-1-\delta$\\
+	$\Rightarrow$ Such an extractor does not exist.
+\end{enumerate}
+
+\section*{Exercise 4}
+\begin{enumerate}
+	\item %$\Delta((S1,...,S_l,ext(S_1,X),...,ext(S_l,X));\mathcal{U}_{l(d+m)})$
+	Yes, since the probability of a collision $Pr[x_i=x_j: x_i,x_j\leftarrow X, 1\leq i<j\leq l]\leq \frac{l^2}{2^k}$
+
+
+	\item In \emph{Step 1} in the third last line of the equation the second case, which describes the probability of collisions of the hash function, is\\
+	$Pr[X_1\neq X_2]Pr[h_{S_1}(X_1)=h_{S_2}(X_2)|S_1=S_2, X_1\neq X_2]=\frac{1+\delta}{2^m}$ instead of $\frac{1}{2^m}$\\
+	$\Rightarrow \text{CP}((h_S(X),S))\leq \frac{1}{2^d}(\frac{1}{2^k}+\frac{1+\delta}{2^m}) = \frac{\epsilon^2 + 1 + \delta}{2^{d+m}}$\\
+
+	Hence in \emph{Step 2} the two last lines read as follows:\\
+	CP$((h_S(X),S))-\frac{2}{2^{d+m}}+\frac{1}{2^{d+m}} \leq \frac{\epsilon^2 + \delta}{2^{d+m}}$ since nothing else in this equation is affected by the change of collision probability.\\
+
+	Thus the last line of \emph{Step 3} results in $\frac{\sqrt{\epsilon^2 + \delta}}{2^{(d+m)/2}}2^{(d+m)/2} = \sqrt{\epsilon^2 + \delta} \leq \epsilon + \sqrt{\delta}$\\
+
+	The completion of the proof implies that a $\delta$-almost universal hash family $\mathcal{H}$ can be used to create a strong $(k,\frac{\epsilon + \sqrt{\delta}}{2})$ extractor Ext.
+\end{enumerate}
+
+\end{document}
